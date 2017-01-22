@@ -131,7 +131,11 @@ class Minecraft:
     """
     def getBlocks(self, *args):
         """Get a cuboid of blocks (x0,y0,z0,x1,y1,z1) => [id:int]"""
-        return int(self.conn.sendReceive("world.getBlocks", intFloor(args)))
+        b = self.conn.sendReceive(b"world.getBlocks", intFloor(args))
+        # server returns a string like '1,1,1,16,16,24,24,24,12,12,12'
+        # the blocks are ordered first by z, then by x, and finally by y
+        ib = [int(x) for x in b.split(",")]
+        return ib
 
     def setBlock(self, *args):
         """Set block (x,y,z,id,[data])"""
